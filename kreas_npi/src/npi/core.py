@@ -1,15 +1,17 @@
 # coding: utf-8
-
 import json
 from copy import copy
-
 import numpy as np
 
+# 程序参数的参数: 最大三个，每个为10位的one-hot
 MAX_ARG_NUM = 3
 ARG_DEPTH = 10   # 0~9 digit. one-hot.
 
+
+# 暂时还不知道干啥的
 PG_CONTINUE = 0
 PG_RETURN = 1
+
 
 # 参数a: 三个数，每个数都是10位的one-hot
 class IntegerArguments:
@@ -46,6 +48,7 @@ class IntegerArguments:
         return "<IA: %s>" % self.decode_all()
 
 
+# 程序: 名称、参数、id
 class Program:
     output_to_env = False
 
@@ -69,14 +72,14 @@ class Program:
     def __str__(self):
         return "<Program: name=%s>" % self.name
 
-
+# 输入: 环境、程序、参数
 class StepInput:
     def __init__(self, env: np.ndarray, program: Program, arguments: IntegerArguments):
         self.env = env
         self.program = program
         self.arguments = arguments
 
-
+# 输出: 结束概率、程序、参数
 class StepOutput:
     def __init__(self, r: float, program: Program=None, arguments: IntegerArguments=None):
         self.r = r
@@ -87,12 +90,14 @@ class StepOutput:
         return "<StepOutput: r=%s pg=%s arg=%s>" % (self.r, self.program, self.arguments)
 
 
+# 结合输入输出
 class StepInOut:
     def __init__(self, input: StepInput, output: StepOutput):
         self.input = input
         self.output = output
 
 
+# 结果日志
 class ResultLogger:
     def __init__(self, filename):
         self.filename = filename
@@ -103,6 +108,7 @@ class ResultLogger:
             f.write("\n")
 
 
+# NPI步
 class NPIStep:
     def reset(self):
         pass
@@ -117,6 +123,7 @@ class NPIStep:
         raise NotImplementedError()
 
 
+# 运行时系统
 class RuntimeSystem:
     def __init__(self, terminal=None):
         self.terminal = terminal

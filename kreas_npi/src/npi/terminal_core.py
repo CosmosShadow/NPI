@@ -1,13 +1,10 @@
-#!/usr/bin/env python
 # coding: utf-8
 import curses
 import numpy as np
-
 from npi.core import Program, IntegerArguments, NPIStep, StepOutput, StepInput, StepInOut
 
-__author__ = 'k_morishita'
 
-
+# 屏幕: 一定宽高的数据显示
 class Screen:
     data = None
 
