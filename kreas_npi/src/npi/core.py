@@ -11,7 +11,7 @@ ARG_DEPTH = 10   # 0~9 digit. one-hot.
 PG_CONTINUE = 0
 PG_RETURN = 1
 
-
+# 参数a: 三个数，每个数都是10位的one-hot
 class IntegerArguments:
     depth = ARG_DEPTH
     max_arg_num = MAX_ARG_NUM
