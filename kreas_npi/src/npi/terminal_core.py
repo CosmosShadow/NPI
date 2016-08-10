@@ -4,7 +4,7 @@ import numpy as np
 from npi.core import Program, IntegerArguments, NPIStep, StepOutput, StepInput, StepInOut
 
 
-# 屏幕: 一定宽高的数据显示
+# 屏幕(内容): 一定宽高的数据
 class Screen:
     data = None
 
@@ -44,7 +44,7 @@ class Terminal:
     def __init__(self, stdscr, char_map=None):
         print(type(stdscr))
         self.stdscr = stdscr
-        self.char_map = char_map or dict((ch, chr(ch)) for ch in range(128))
+        self.char_map = char_map or dict((ch, chr(ch)) for ch in range(128))    #所有字符
         self.log_list = []
 
     def init_window(self, width, height):
@@ -56,8 +56,10 @@ class Terminal:
         self.main_window = curses.newwin(height, width, self.W_TOP + 1, self.W_LEFT + 1)
         self.main_window.refresh()
         self.main_window.timeout(1)
+        # info放在main的右边
         self.info_window = curses.newwin(self.INFO_WINDOW_HEIGHT, self.INFO_WINDOW_WIDTH,
                                          self.W_TOP + 1, self.W_LEFT + width + 2)
+        # log放在main的下面
         self.log_window = curses.newwin(self.LOG_WINDOW_HEIGHT, self.LOG_WINDOW_WIDTH,
                                         self.W_TOP + max(height, self.INFO_WINDOW_HEIGHT) + 5, self.W_LEFT)
         self.log_window.refresh()
@@ -94,7 +96,6 @@ class Terminal:
 
     @staticmethod
     def ignore_error_add_str(win, y, x, s, attr=curses.A_NORMAL):
-        """一番右下に書き込むと例外が飛んでくるけど、漢は黙って無視するのがお作法らしい？"""
         try:
             win.addstr(y, x, s, attr)
         except curses.error:
