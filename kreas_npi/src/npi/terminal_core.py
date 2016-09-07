@@ -4,7 +4,8 @@ import numpy as np
 from npi.core import Program, IntegerArguments, NPIStep, StepOutput, StepInput, StepInOut
 
 
-# 屏幕(内容): 一定宽高的数据
+
+# 屏幕(内容): 一定宽高的数据(二维数据)
 class Screen:
     data = None
 
@@ -29,6 +30,8 @@ class Screen:
         return self.data[item]
 
 
+
+# 终端: 显示内容，包括三部分: main, info, log
 class Terminal:
     W_TOP = 1
     W_LEFT = 1
@@ -72,6 +75,7 @@ class Terminal:
             line = "".join([self.char_map[ch] for ch in screen[y]])
             self.ignore_error_add_str(self.main_window, y, 0, line)
 
+    # 更新光标
     def update_main_window_attr(self, screen, y, x, attr):
         ch = screen[y, x]
         self.ignore_error_add_str(self.main_window, y, x, self.char_map[ch], attr)
@@ -102,6 +106,7 @@ class Terminal:
             pass
 
 
+# 显示“环境”到界面: 数据与光标
 def show_env_to_terminal(terminal, env):
     terminal.update_main_screen(env.screen)
     for i, p in enumerate(env.pointers):
@@ -109,27 +114,30 @@ def show_env_to_terminal(terminal, env):
     terminal.refresh_main_window()
 
 
+# 终端与模型 整体运行器
 class TerminalNPIRunner:
     def __init__(self, terminal: Terminal, model: NPIStep=None, recording=True, max_depth=10, max_step=1000):
-        self.terminal = terminal
-        self.model = model
+        self.terminal = terminal        #显示终端
+        self.model = model              #模型
         self.steps = 0
         self.step_list = []
-        self.alpha = 0.5
-        self.verbose = True
-        self.recording = recording
-        self.max_depth = max_depth
-        self.max_step = max_step
+        self.alpha = 0.5        #return threshold
+        self.verbose = True                     #显示详情
+        self.recording = recording          #是否记录
+        self.max_depth = max_depth  #最大深度
+        self.max_step = max_step        #最大长度
 
     def reset(self):
         self.steps = 0
         self.step_list = []
         self.model.reset()
 
+    # 显示“环境"
     def display_env(self, env, force=False):
         if (self.verbose or force) and self.terminal:
             show_env_to_terminal(self.terminal, env)
 
+    # 显示当前信息: 程序运行多深，哪一步，下一步的情况
     def display_information(self, program: Program, arguments: IntegerArguments, result: StepOutput, depth: int):
         if self.verbose and self.terminal:
             information = [

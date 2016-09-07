@@ -8,7 +8,7 @@ MAX_ARG_NUM = 3
 ARG_DEPTH = 10   # 0~9 digit. one-hot.
 
 
-# 暂时还不知道干啥的
+# program continure, program return?
 PG_CONTINUE = 0
 PG_RETURN = 1
 
@@ -40,12 +40,14 @@ class IntegerArguments:
     def decode_at(self, index: int) -> int:
         return self.values[index].argmax()
 
+    # 第index位参数设置成integer大小(one-hot)
     def update_to(self, index: int, integer: int):
         self.values[index] = 0
         self.values[index, int(np.clip(integer, 0, self.depth-1))] = 1
 
     def __str__(self):
         return "<IA: %s>" % self.decode_all()
+
 
 
 # 程序: 名称、参数、id
@@ -72,12 +74,16 @@ class Program:
     def __str__(self):
         return "<Program: name=%s>" % self.name
 
+
+
 # 输入: 环境、程序、参数
 class StepInput:
     def __init__(self, env: np.ndarray, program: Program, arguments: IntegerArguments):
         self.env = env
         self.program = program
         self.arguments = arguments
+
+
 
 # 输出: 结束概率、程序、参数
 class StepOutput:
@@ -90,11 +96,13 @@ class StepOutput:
         return "<StepOutput: r=%s pg=%s arg=%s>" % (self.r, self.program, self.arguments)
 
 
+
 # 结合输入输出
 class StepInOut:
     def __init__(self, input: StepInput, output: StepOutput):
         self.input = input
         self.output = output
+
 
 
 # 结果日志
@@ -106,6 +114,7 @@ class ResultLogger:
         with open(self.filename, "a") as f:
             json.dump(obj, f)
             f.write("\n")
+
 
 
 # NPI步
