@@ -2,27 +2,23 @@
 from random import random
 
 import numpy as np
-
 from npi.core import Program, IntegerArguments, StepOutput, NPIStep, PG_CONTINUE, PG_RETURN
 from npi.terminal_core import Screen, Terminal
 
-__author__ = 'k_morishita'
 
-
+# 加法器的“环境”
 class AdditionEnv:
-    """
-    Environment of Addition
-    """
     def __init__(self, height, width, num_chars):
         self.screen = Screen(height, width)
-        self.num_chars = num_chars
-        self.pointers = [0] * height
+        self.num_chars = num_chars      #chars的类别数
+        self.pointers = [0] * height            #指针位置
         self.reset()
 
     def reset(self):
         self.screen.fill(0)
         self.pointers = [self.screen.width-1] * self.screen.height  # rightmost
 
+    # 当前指针所指内容
     def get_observation(self) -> np.ndarray:
         value = []
         for row in range(len(self.pointers)):
@@ -39,7 +35,7 @@ class AdditionEnv:
 
     def setup_problem(self, num1, num2):
         for i, s in enumerate(reversed("%s" % num1)):
-            self.screen[0, -(i+1)] = int(s) + 1
+            self.screen[0, -(i+1)] = int(s) + 1     #0~9 -> 1~10
         for i, s in enumerate(reversed("%s" % num2)):
             self.screen[1, -(i+1)] = int(s) + 1
 
@@ -60,33 +56,38 @@ class AdditionEnv:
         return int(s or "0")
 
 
+# 函数: 移动指针
 class MovePtrProgram(Program):
     output_to_env = True
-    PTR_IN1 = 0
-    PTR_IN2 = 1
-    PTR_CARRY = 2
-    PTR_OUT = 3
+    PTR_IN1 = 0         #pointer input
+    PTR_IN2 = 1         #pointer input
+    PTR_CARRY = 2   #pointer carry
+    PTR_OUT = 3         #pointer output
 
     TO_LEFT = 0
     TO_RIGHT = 1
 
+    # 1: 哪一行，2: 左移或者右移
     def do(self, env: AdditionEnv, args: IntegerArguments):
         ptr_kind = args.decode_at(0)
         left_or_right = args.decode_at(1)
         env.move_pointer(ptr_kind, left_or_right)
 
 
+# 函数: 写
 class WriteProgram(Program):
     output_to_env = True
     WRITE_TO_CARRY = 0
     WRITE_TO_OUTPUT = 1
 
+    # 1: 哪一行(2, 3)，写什么
     def do(self, env: AdditionEnv, args: IntegerArguments):
         row = 2 if args.decode_at(0) == self.WRITE_TO_CARRY else 3
         digit = args.decode_at(1)
         env.write(row, digit+1)
 
 
+# 函数集
 class AdditionProgramSet:
     NOP = Program('NOP')
     MOVE_PTR = MovePtrProgram('MOVE_PTR', 4, 2)  # PTR_KIND(4), LEFT_OR_RIGHT(2)
