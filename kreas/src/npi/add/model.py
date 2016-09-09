@@ -108,13 +108,7 @@ class AdditionNPIModel(NPIStep):
         self.model.compile(optimizer=optimizer, loss=loss, loss_weights=[0.25, 0.25] + [arg_weight] * arg_num)
 
     def fit(self, steps_list, epoch=3000):
-        """
-
-        :param int epoch:
-        :param typing.List[typing.Dict[q=dict, steps=typing.List[StepInOut]]] steps_list:
-        :return:
-        """
-
+        # 过滤一些问题
         def filter_question(condition_func):
             sub_steps_list = []
             for steps_dict in steps_list:
@@ -123,30 +117,11 @@ class AdditionNPIModel(NPIStep):
                     sub_steps_list.append(steps_dict)
             return sub_steps_list
 
-        # self.print_weights()
         if not self.weight_loaded:
             self.train_f_enc(filter_question(lambda a, b: 10 <= a < 100 and 10 <= b < 100), epoch=100)
         self.f_enc.trainable = False
 
         self.update_learning_rate(0.0001)
-
-        # q_type = "training questions of a+b < 10"
-        # print(q_type)
-        # pr = 0.8
-        # all_ok = self.fit_to_subset(filter_question(lambda a, b: a+b < 10), pass_rate=pr)
-        # print("%s is pass_rate >= %s: %s" % (q_type, pr, all_ok))
-        #
-        # q_type = "training questions of a<10 and b< 10 and 10 <= a+b"
-        # print(q_type)
-        # pr = 0.8
-        # all_ok = self.fit_to_subset(filter_question(lambda a, b: a<10 and b<10 and a + b >= 10), pass_rate=pr)
-        # print("%s is pass_rate >= %s: %s" % (q_type, pr, all_ok))
-        #
-        # q_type = "training questions of a<10 and b<10"
-        # print(q_type)
-        # pr = 0.8
-        # all_ok = self.fit_to_subset(filter_question(lambda a, b: a < 10 and b < 10), pass_rate=pr)
-        # print("%s is pass_rate >= %s: %s" % (q_type, pr, all_ok))
 
         q_type = "training questions of a<100 and b<100"
         print(q_type)
