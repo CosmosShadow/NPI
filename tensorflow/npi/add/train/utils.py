@@ -95,10 +95,22 @@ def run_npi(addition_env, npi_runner, program, data):
     data['correct'] = data['result'] == data['expect']
 
 
-if __name__ == '__main__':
-    step_list = create_one_train_data(12, 34)
-    print step_list
+def print_step_list(step_list):
     print step_list['q']
-    print step_list['steps'][0].input
-    print step_list['steps'][0].output
-    print step_list['steps'][1]
+    print
+    for i in range(len(step_list['steps'])):
+        print step_list['steps'][i].input
+        print step_list['steps'][i].output
+        print
+
+
+if __name__ == '__main__':
+    step_list = create_one_train_data(3, 4)
+    print_step_list(step_list)
+
+
+
+
+
+
+

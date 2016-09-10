@@ -7,7 +7,10 @@ class StepInput:
         self.arguments = arguments
 
     def __str__(self):
-        return "<StepInput: env=%s pg=%s arg=%s>" % (self.env, self.program, self.arguments)
+        env_decode = []
+        for i in range(len(self.env)):
+            env_decode.append(self.env[i].argmax()-1)
+        return "<StepInput: env=%s pg=%s arg=%s>" % (env_decode, self.program, self.arguments)
 
 
 class StepOutput:
