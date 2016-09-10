@@ -11,7 +11,7 @@ PROGRAM_KEY_VEC_SIZE = 5
 MAX_PROGRAM_NUM = 10
 
 # arguments coding
-MAX_ARG_NUM = 3
+ARG_NUM = 3
 ARG_DEPTH = 10   # 0~9 digit. one-hot.
 
 # program continure, program return?

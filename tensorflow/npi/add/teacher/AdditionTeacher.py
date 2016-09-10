@@ -1,8 +1,12 @@
 # coding: utf-8
 import numpy as np
-from npi.add.base.AdditionProgramSet import *
+
 from npi.core.StepInputOutput import *
 from npi.core.NPIStep import *
+from npi.core.IntegerArguments import *
+from npi.add.base.config import *
+from npi.add.base.AdditionProgramSet import *
+
 
 class AdditionTeacher(NPIStep):
     def __init__(self, program_set):
@@ -19,7 +23,8 @@ class AdditionTeacher(NPIStep):
         self.register_subprogram(program_set.RSHIFT  , self.pg_rshift)
 
     def reset(self):
-        super(AdditionTeacher, self).reset()
+        NPIStep.reset(self)
+        # super(AdditionTeacher, self).reset()
         self.step_queue_stack = []
         self.step_queue = None
 
@@ -50,9 +55,9 @@ class AdditionTeacher(NPIStep):
     @staticmethod
     def convert_for_step_return(step_values):
         if len(step_values) == 2:
-            return StepOutput(PG_CONTINUE, step_values[0], IntegerArguments(step_values[1]))
+            return StepOutput(PG_CONTINUE, step_values[0], IntegerArguments(ARG_NUM, ARG_DEPTH, step_values[1]))
         else:
-            return StepOutput(step_values[0], step_values[1], IntegerArguments(step_values[2]))
+            return StepOutput(step_values[0], step_values[1], IntegerArguments(ARG_NUM, ARG_DEPTH, step_values[2]))
 
     @staticmethod
     def pg_primitive(env_observation, arguments):

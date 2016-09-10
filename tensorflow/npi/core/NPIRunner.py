@@ -1,4 +1,5 @@
 # coding: utf-8
+from npi.core.StepInputOutput import *
 
 class NPIRunner:
     # model: NPIStep
@@ -34,11 +35,9 @@ class NPIRunner:
             result = self.model.step(env_observation, program, arguments.copy())
             if self.recording:
                 self.step_list.append(StepInOut(StepInput(env_observation, program, arguments.copy()), result))
-            self.display_information(program, arguments, result, depth)
 
             if program.output_to_env:
                 program.do(env, arguments.copy())
-                self.display_env(env)
             else:
                 if result.program:  # modify original algorithm
                     self.npi_program_interface(env, result.program, result.arguments, depth=depth+1)

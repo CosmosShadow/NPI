@@ -1,5 +1,5 @@
 # coding: utf-8
-from npi.core import Screen
+from npi.core.Screen import *
 
 
 # 加法器的“环境”

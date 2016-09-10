@@ -6,6 +6,9 @@ class StepInput:
         self.program = program
         self.arguments = arguments
 
+    def __str__(self):
+        return "<StepInput: env=%s pg=%s arg=%s>" % (self.env, self.program, self.arguments)
+
 
 class StepOutput:
     def __init__(self, r, program, arguments):

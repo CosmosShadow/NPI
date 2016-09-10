@@ -1,5 +1,5 @@
 # coding: utf-8
-# import numpy as np
+import numpy as np
 
 # 屏幕(内容): 一定宽高的数据(二维数据)
 class Screen:

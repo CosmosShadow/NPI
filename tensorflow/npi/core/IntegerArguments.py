@@ -1,8 +1,9 @@
 # coding: utf-8
+import numpy as np
 
 # 参数: arg_num * arg_depth
 class IntegerArguments:
-	def __init__(self, arg_num, arg_depth, args, values):
+	def __init__(self, arg_num, arg_depth, args=None, values=None):
 		self.max_arg_num = arg_num
 		self.depth = arg_depth
 		self.size_of_arguments = self.max_arg_num * self.depth
@@ -16,7 +17,7 @@ class IntegerArguments:
 				self.update_to(i, v)
 
 	def copy(self):
-		obj = IntegerArguments()
+		obj = IntegerArguments(self.max_arg_num, self.depth)
 		obj.values = np.copy(self.values)
 		return obj
 
